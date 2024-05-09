@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieService", "MovieService\MovieService.csproj", "{AB7FD8E2-2E8B-4A4A-922F-841730600BC7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB7FD8E2-2E8B-4A4A-922F-841730600BC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB7FD8E2-2E8B-4A4A-922F-841730600BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB7FD8E2-2E8B-4A4A-922F-841730600BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB7FD8E2-2E8B-4A4A-922F-841730600BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
