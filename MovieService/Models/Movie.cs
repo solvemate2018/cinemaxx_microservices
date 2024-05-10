@@ -31,5 +31,5 @@ public class Movie
     public int DirectorId { get; set; }
     public Director Director { get; set; }
     
-    public ICollection<MovieActor> MovieActors { get; set; }
+    public ICollection<Actor> Actors { get; set; }
 }

@@ -1,11 +1,13 @@
-﻿using MovieService.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieService.Data;
+using MovieService.Models;
 
 namespace MovieService.Services.DirectorsService;
 
-public class DirectorsService : IDirectorsService
+public class DirectorsService(MovieServiceDbContext dbContext) : IDirectorsService
 {
-    public Task<List<Director>> GetAllDirectorsAsync()
+    public async Task<List<Director>> GetAllDirectorsAsync()
     {
-        throw new NotImplementedException();
+        return await dbContext.Directors.ToListAsync();
     }
 }

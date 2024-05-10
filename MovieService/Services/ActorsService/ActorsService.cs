@@ -4,17 +4,10 @@ using MovieService.Models;
 
 namespace MovieService.Services;
 
-public class ActorsService : IActorsService
+public class ActorsService(MovieServiceDbContext dbContext) : IActorsService
 {
-    private readonly MovieServiceDbContext _dbContext;
-
-    public ActorsService(MovieServiceDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<List<Actor>> GetAllActorsAsync()
     {
-        return await _dbContext.Actors.ToListAsync();
+        return await dbContext.Actors.ToListAsync();
     }
 }
