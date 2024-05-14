@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   try {
-    const mongoURI = "";
+    const mongoURI = "mongodb://localhost:27017/projectionDB";
     await mongoose.connect(mongoURI);
     console.log('MongoDB connected successfully');
   } catch (error) {

@@ -3,10 +3,10 @@ import projectionController from '../controllers/projectionController';
 
 const router = Router();
 
-router.get('/', projectionController.getAllProjections);
-router.post('/', projectionController.createProjection);
-router.get('/:id', projectionController.getProjectionById);
-router.put('/:id', projectionController.updateProjection);
-router.delete('/:id', projectionController.deleteProjection);
+router.get('/api/projections/', projectionController.getAllProjections);
+router.post('/api/projections/', projectionController.createProjection);
+router.get('/api/projections/:projectionId', projectionController.getProjectionById);
+router.put('/api/projections/:projectionId', projectionController.updateProjection);
+router.delete('/api/projections/:projectionId', projectionController.deleteProjection);
 
 export default router;
