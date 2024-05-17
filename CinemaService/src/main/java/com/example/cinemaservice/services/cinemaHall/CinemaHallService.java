@@ -4,6 +4,7 @@ import com.example.cinemaservice.dtos.CreateCinemaHallDTO;
 import com.example.cinemaservice.entities.Cinema;
 import com.example.cinemaservice.entities.CinemaHall;
 import com.example.cinemaservice.entities.MovieSchedule;
+import com.example.cinemaservice.integration.rabbitmq.RabbitMQProducer;
 import com.example.cinemaservice.repositories.CinemaHallRepository;
 import com.example.cinemaservice.services.cinema.CinemaService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -15,10 +16,12 @@ import java.util.Collection;
 public class CinemaHallService implements CinemaHallServiceInterface {
     private final CinemaHallRepository cinemaHallRepository;
     private final CinemaService cinemaService;
+    private final RabbitMQProducer mqProducer;
 
-    public CinemaHallService(CinemaHallRepository cinemaHallRepository, CinemaService cinemaService) {
+    public CinemaHallService(CinemaHallRepository cinemaHallRepository, CinemaService cinemaService, RabbitMQProducer mqProducer) {
         this.cinemaHallRepository = cinemaHallRepository;
         this.cinemaService = cinemaService;
+        this.mqProducer = mqProducer;
     }
 
     @Override
@@ -55,7 +58,9 @@ public class CinemaHallService implements CinemaHallServiceInterface {
     @Override
     public boolean deleteCinemaHall(int cinemaHallId) {
         try {
-            cinemaHallRepository.deleteById(cinemaHallId);
+            CinemaHall cinemaHall = cinemaHallRepository.findById(cinemaHallId).orElseThrow(() -> new ResourceNotFoundException("There is no such cinema hall in our system!"));
+            mqProducer.deleteCinemaHall(cinemaHall);
+            cinemaHallRepository.delete(cinemaHall);
             return true;
         }
         catch (Exception exception){

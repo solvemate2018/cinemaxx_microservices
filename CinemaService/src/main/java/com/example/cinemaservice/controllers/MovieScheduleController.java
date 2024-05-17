@@ -19,21 +19,25 @@ public class MovieScheduleController {
         this.movieScheduleService = movieScheduleService;
     }
 
+    //Used by admin and user to get schedules and pick projections
     @GetMapping("")
     public ResponseEntity<Collection<MovieSchedule>> getSchedulesByHallId(@PathVariable int cinemaId, @PathVariable int hallId) {
         return new ResponseEntity<>(movieScheduleService.getMovieSchedulesForCinemaHall(hallId), HttpStatus.OK);
     }
 
+    //Used to get details about schedule maybe used in projection details
     @GetMapping("/{scheduleId}")
     public ResponseEntity<MovieSchedule> getScheduleDetails(@PathVariable int cinemaId, @PathVariable int hallId, @PathVariable int scheduleId){
         return new ResponseEntity<>(movieScheduleService.getMovieSchedule(scheduleId), HttpStatus.OK);
     }
 
+    //Admin endpoint (Needs to announce it to have projection service create projections)
     @PostMapping("")
     public ResponseEntity<MovieSchedule> createSchedule(@PathVariable int cinemaId, @PathVariable int hallId, @RequestBody MovieSchedule schedule){
         return new ResponseEntity<>(movieScheduleService.createMovieSchedule(hallId, schedule), HttpStatus.CREATED);
     }
 
+    //Admin endpoint (Needs to announce it to change projection service)
     @PutMapping("/{scheduleId}")
     public ResponseEntity<Void> updateSchedule(@PathVariable int cinemaId, @PathVariable int hallId, @PathVariable int scheduleId, @RequestBody MovieSchedule schedule){
         if(movieScheduleService.updateMovieSchedule(scheduleId, schedule)){
@@ -42,6 +46,7 @@ public class MovieScheduleController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    //Admin endpoint (Needs to announce it to change projection service)
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable int cinemaId, @PathVariable int hallId, @PathVariable int scheduleId){
         if(movieScheduleService.deleteMovieSchedule(scheduleId)){

@@ -49,4 +49,9 @@ public class MovieSchedule {
     @CollectionTable(name = "days_of_week", joinColumns = @JoinColumn(name = "schedule_id"))
     @Column(name = "day_of_week")
     private Collection<Integer> daysOfWeek = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return movieId + " " + hall.toString();
+    }
 }

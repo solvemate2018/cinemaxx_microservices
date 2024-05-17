@@ -55,4 +55,9 @@ public class CinemaHall {
         schedules.add(schedule);
         schedule.setHall(this);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

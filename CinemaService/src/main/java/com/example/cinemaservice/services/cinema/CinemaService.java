@@ -2,6 +2,7 @@ package com.example.cinemaservice.services.cinema;
 
 import com.example.cinemaservice.entities.Cinema;
 import com.example.cinemaservice.entities.CinemaHall;
+import com.example.cinemaservice.integration.rabbitmq.RabbitMQProducer;
 import com.example.cinemaservice.repositories.CinemaRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,11 @@ import java.util.Collection;
 @Service
 public class CinemaService implements CinemaServiceInterface {
     private final CinemaRepository cinemaRepository;
+    private final RabbitMQProducer mqProducer;
 
-    public CinemaService(CinemaRepository cinemaRepository) {
+    public CinemaService(CinemaRepository cinemaRepository, RabbitMQProducer mqProducer) {
         this.cinemaRepository = cinemaRepository;
+        this.mqProducer = mqProducer;
     }
 
     @Override
@@ -34,7 +37,9 @@ public class CinemaService implements CinemaServiceInterface {
     @Override
     public boolean deleteCinema(int id) {
         try {
-            cinemaRepository.deleteById(id);
+            Cinema cinema = cinemaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("There is no such cinema in our system!"));
+            mqProducer.deleteCinema(cinema);
+            cinemaRepository.delete(cinema);
             return true;
         }
         catch (Exception exception){

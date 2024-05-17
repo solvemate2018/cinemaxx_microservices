@@ -18,21 +18,25 @@ public class HallController {
         this.cinemaHallService = cinemaHallService;
     }
 
+    //Mainly for admin
     @GetMapping("/{cinemaId}/halls")
     public ResponseEntity<Collection<CinemaHall>> getAllHallsByCinemaId(@PathVariable int cinemaId) {
         return new ResponseEntity<>(cinemaHallService.getCinemaHallsByCinemaId(cinemaId), HttpStatus.OK);
     }
 
+    //For user to see seats and projections there
     @GetMapping("/{cinemaId}/halls/{hallId}")
     public ResponseEntity<CinemaHall> getHallDetails(@PathVariable int cinemaId, @PathVariable int hallId){
         return new ResponseEntity<>(cinemaHallService.getCinemaHall(hallId), HttpStatus.OK);
     }
 
+    //Admin endpoint
     @PostMapping("/{cinemaId}/halls")
     public ResponseEntity<CinemaHall> createHall(@PathVariable int cinemaId, @RequestBody CreateCinemaHallDTO cinemaHall){
         return new ResponseEntity<>(cinemaHallService.createCinemaHall(cinemaId, cinemaHall), HttpStatus.CREATED);
     }
 
+    //Admin endpoint used just for changing name of cinema hall
     @PutMapping("/{cinemaId}/halls/{hallId}")
     public ResponseEntity<Void> updateHall(@PathVariable int cinemaId, @PathVariable int hallId, @RequestBody CreateCinemaHallDTO cinemaHall){
         if(cinemaHallService.updateCinemaHall(hallId, cinemaHall)){
@@ -41,6 +45,7 @@ public class HallController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    //Admin Endpoint (Needs to announce that it was deleted)
     @DeleteMapping("/{cinemaId}/halls/{hallId}")
     public ResponseEntity<Void> deleteHall(@PathVariable int cinemaId, @PathVariable int hallId){
         if(cinemaHallService.deleteCinemaHall(hallId)){

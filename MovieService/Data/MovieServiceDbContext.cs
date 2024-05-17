@@ -13,7 +13,7 @@ public class MovieServiceDbContext : DbContext
     
     public MovieServiceDbContext(DbContextOptions<MovieServiceDbContext> options) : base(options)
     {
-        Database.EnsureCreatedAsync();
+        Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

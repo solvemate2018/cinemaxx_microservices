@@ -28,7 +28,15 @@ builder.Services.AddScoped<IMoviesService, MoviesService>();
 
 builder.Services.AddDbContext<MovieServiceDbContext>(options =>
 {
-    options.UseInMemoryDatabase("Movies");
+    if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")))
+    {
+        options.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));
+        Console.WriteLine(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));
+    }
+    else
+    {
+        options.UseInMemoryDatabase("Movies");
+    }
 });
 
 builder.Services.AddAuthentication();

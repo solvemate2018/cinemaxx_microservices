@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 @Entity
@@ -35,5 +36,10 @@ public class Cinema {
     public void addCinemaHall(CinemaHall hall) {
         this.cinemaHalls.add(hall);
         hall.setCinema(this);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

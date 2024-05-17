@@ -1,8 +1,16 @@
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
+const connectionString = process.env.DB_CONNECTION_STRING;
 const connectDB = async () => {
   try {
-    const mongoURI = "mongodb://localhost:27017/projectionDB";
+    let mongoURI = connectionString;
+    
+    if (!mongoURI) {
+      const mongod = await MongoMemoryServer.create();
+      mongoURI = mongod.getUri();
+    }
+    console.log(mongoURI);
     await mongoose.connect(mongoURI);
     console.log('MongoDB connected successfully');
   } catch (error) {
