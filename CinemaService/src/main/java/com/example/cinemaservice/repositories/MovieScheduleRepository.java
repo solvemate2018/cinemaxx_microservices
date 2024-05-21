@@ -11,4 +11,5 @@ import java.util.Collection;
 @RepositoryRestResource(exported = false)
 public interface MovieScheduleRepository extends JpaRepository<MovieSchedule, Integer> {
     Collection<MovieSchedule> findByHall_Id(int hallId);
+    Collection<MovieSchedule> findAllByMovieId(int movieId);
 }

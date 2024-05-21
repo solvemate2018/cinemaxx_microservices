@@ -1,10 +1,9 @@
 package com.example.cinemaservice.services.cinemaHall;
 
 import com.example.cinemaservice.dtos.CreateCinemaHallDTO;
-import com.example.cinemaservice.entities.Cinema;
 import com.example.cinemaservice.entities.CinemaHall;
 import com.example.cinemaservice.entities.MovieSchedule;
-import com.example.cinemaservice.integration.rabbitmq.RabbitMQProducer;
+import com.example.cinemaservice.integration.rabbitmq.RabbitMqProducer;
 import com.example.cinemaservice.repositories.CinemaHallRepository;
 import com.example.cinemaservice.services.cinema.CinemaService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -16,9 +15,9 @@ import java.util.Collection;
 public class CinemaHallService implements CinemaHallServiceInterface {
     private final CinemaHallRepository cinemaHallRepository;
     private final CinemaService cinemaService;
-    private final RabbitMQProducer mqProducer;
+    private final RabbitMqProducer mqProducer;
 
-    public CinemaHallService(CinemaHallRepository cinemaHallRepository, CinemaService cinemaService, RabbitMQProducer mqProducer) {
+    public CinemaHallService(CinemaHallRepository cinemaHallRepository, CinemaService cinemaService, RabbitMqProducer mqProducer) {
         this.cinemaHallRepository = cinemaHallRepository;
         this.cinemaService = cinemaService;
         this.mqProducer = mqProducer;

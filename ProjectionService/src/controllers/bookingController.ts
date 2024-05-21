@@ -3,6 +3,7 @@ import Booking from '../models/Booking';
 
 
 const bookingController = {
+  //Used by admin
     getAllBookingsForProjection: async (req: Request, res: Response) => {
         try {
           const projectionId = req.params.projectionId;
@@ -13,7 +14,7 @@ const bookingController = {
         }
       },
     
-  
+  //Used by user to make reservations
       createBookingForProjection: async (req: Request, res: Response) => {
         try {
           const projectionId = req.params.projectionId;
@@ -26,7 +27,7 @@ const bookingController = {
         }
       },
     
-
+    //Used by user 
       getBookingByIdForProjection: async (req: Request, res: Response) => {
         try {
           const projectionId = req.params.projectionId;
@@ -40,7 +41,7 @@ const bookingController = {
         }
       },
     
-
+      //Used by user
       updateBookingForProjection: async (req: Request, res: Response) => {
         try {
           const projectionId = req.params.projectionId;
@@ -54,7 +55,7 @@ const bookingController = {
         }
       },
     
-
+      //Used by user
       deleteBookingForProjection: async (req: Request, res: Response) => {
         try {
           const projectionId = req.params.projectionId;

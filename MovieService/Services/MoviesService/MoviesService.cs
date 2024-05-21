@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieService.Data;
+using MovieService.integrations.RabbitMQ;
 using MovieService.Models;
 using MovieService.Request;
 
 namespace MovieService.Services.MoviesService;
 
-public class MoviesService(MovieServiceDbContext dbContext) : IMoviesService
+public class MoviesService(MovieServiceDbContext dbContext, RabbitMqProducer mqProducer) : IMoviesService
 {
     public async Task<List<Movie>> GetAllMoviesAsync()
     {
@@ -62,6 +63,8 @@ public class MoviesService(MovieServiceDbContext dbContext) : IMoviesService
         {
             return null;
         }
+
+        var oldMovieDuration = movie.Duration;
         
         movie.Title = requestData.Title;
         movie.Description = requestData.Description;
@@ -77,17 +80,22 @@ public class MoviesService(MovieServiceDbContext dbContext) : IMoviesService
         {
             dbContext.MovieActors.Add(new MovieActor { MovieId = movie.Id, ActorId = actor.Id });
         }
-        
-        await dbContext.SaveChangesAsync();
 
+        if (oldMovieDuration != requestData.Duration)
+        {
+            mqProducer.ChangeMovieDuration(movie);
+        }
+        await dbContext.SaveChangesAsync();
+        
         return movie;
     }
 
     public async Task<bool> DeleteMovieAsync(int movieId)
     {
         Movie? movie = await dbContext.Movies.FindAsync(movieId);
-        if (movie != null)
+        if (movie == null)
             return false;
+        mqProducer.DeleteMovie(movie);
         dbContext.Remove(movie);
         await dbContext.SaveChangesAsync();
         return true;

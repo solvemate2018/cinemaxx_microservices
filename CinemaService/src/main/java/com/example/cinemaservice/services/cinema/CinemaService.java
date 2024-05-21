@@ -2,7 +2,7 @@ package com.example.cinemaservice.services.cinema;
 
 import com.example.cinemaservice.entities.Cinema;
 import com.example.cinemaservice.entities.CinemaHall;
-import com.example.cinemaservice.integration.rabbitmq.RabbitMQProducer;
+import com.example.cinemaservice.integration.rabbitmq.RabbitMqProducer;
 import com.example.cinemaservice.repositories.CinemaRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,9 @@ import java.util.Collection;
 @Service
 public class CinemaService implements CinemaServiceInterface {
     private final CinemaRepository cinemaRepository;
-    private final RabbitMQProducer mqProducer;
+    private final RabbitMqProducer mqProducer;
 
-    public CinemaService(CinemaRepository cinemaRepository, RabbitMQProducer mqProducer) {
+    public CinemaService(CinemaRepository cinemaRepository, RabbitMqProducer mqProducer) {
         this.cinemaRepository = cinemaRepository;
         this.mqProducer = mqProducer;
     }

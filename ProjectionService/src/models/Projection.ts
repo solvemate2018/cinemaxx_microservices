@@ -3,6 +3,8 @@ import { Schema, model, Document, Types } from 'mongoose';
 interface Projection extends Document {
     movieId: Number,
     cinemaHallId: Number,
+    cinemaId: Number,
+    scheduleId: Number,
     startTime: Date,
     endTime: Date,
     price: Number,
@@ -11,6 +13,8 @@ interface Projection extends Document {
 const projectionSchema = new Schema<Projection>({
     movieId: { type: Number, required: true },
     cinemaHallId: { type: Number, required: true },
+    cinemaId: { type: Number, required: true },
+    scheduleId: { type: Number, required: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     price: { type: Number, required: true, validate: {

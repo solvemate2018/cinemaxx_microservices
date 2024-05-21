@@ -10,5 +10,5 @@ public interface MovieScheduleServiceInterface {
     MovieSchedule createMovieSchedule(int cinemaHallId, MovieSchedule movieSchedule);
     boolean updateMovieSchedule(int id, MovieSchedule movieSchedule);
     boolean deleteMovieSchedule(int id);
-
+    int deleteMovieSchedulesByMovieId(int movieId);
 }

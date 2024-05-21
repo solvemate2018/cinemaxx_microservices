@@ -1,10 +1,11 @@
 package com.example.cinemaservice.services.movieSchedule;
 
-import com.example.cinemaservice.entities.CinemaHall;
 import com.example.cinemaservice.entities.MovieSchedule;
-import com.example.cinemaservice.integration.rabbitmq.RabbitMQProducer;
+import com.example.cinemaservice.integration.rabbitmq.RabbitMqProducer;
 import com.example.cinemaservice.repositories.MovieScheduleRepository;
 import com.example.cinemaservice.services.cinemaHall.CinemaHallService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,12 @@ import java.util.Collection;
 
 @Service
 public class MovieScheduleService implements MovieScheduleServiceInterface {
+    private static final Logger log = LoggerFactory.getLogger(MovieScheduleService.class);
     private final MovieScheduleRepository movieScheduleRepository;
     private final CinemaHallService cinemaHallService;
-    private final RabbitMQProducer mqProducer;
+    private final RabbitMqProducer mqProducer;
 
-    public MovieScheduleService(MovieScheduleRepository movieScheduleRepository, CinemaHallService cinemaHallService, RabbitMQProducer mqProducer) {
+    public MovieScheduleService(MovieScheduleRepository movieScheduleRepository, CinemaHallService cinemaHallService, RabbitMqProducer mqProducer) {
         this.movieScheduleRepository = movieScheduleRepository;
         this.cinemaHallService = cinemaHallService;
         this.mqProducer = mqProducer;
@@ -81,6 +83,20 @@ public class MovieScheduleService implements MovieScheduleServiceInterface {
         }
         catch (Exception exception){
             return false;
+        }
+    }
+
+    @Override
+    public int deleteMovieSchedulesByMovieId(int movieId) {
+        try {
+            var _dbMovieSchedules = movieScheduleRepository.findAllByMovieId(movieId);
+            var entitiesCount = _dbMovieSchedules.size();
+            movieScheduleRepository.deleteAll(_dbMovieSchedules);
+            return entitiesCount;
+        }
+        catch (Exception exception){
+            log.error(exception.getMessage());
+            return 0;
         }
     }
 }

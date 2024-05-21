@@ -35,6 +35,7 @@ public class MoviesController(IMoviesService moviesService) : ControllerBase
         return BadRequest();
     }
 
+    //Update if Duration changes
     [HttpPut]
     [Route("{movieId}")]
     public async Task<IActionResult> UpdateMovie([FromRoute] int movieId, [FromBody] MovieRequest requestBody)
@@ -45,6 +46,7 @@ public class MoviesController(IMoviesService moviesService) : ControllerBase
         return BadRequest();
     }
     
+    //Needs to publish event
     [HttpDelete]
     [Route("{movieId}")]
     public async Task<IActionResult> DeleteMovie([FromRoute] int movieId)

@@ -32,4 +32,9 @@ public class Movie
     public Director Director { get; set; }
     
     public ICollection<Actor> Actors { get; set; }
+
+    public override string ToString()
+    {
+        return Title;
+    }
 }

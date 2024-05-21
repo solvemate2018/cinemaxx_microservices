@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Booking_1 = __importDefault(require("../models/Booking"));
 const bookingController = {
+    //Used by admin
     getAllBookingsForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const projectionId = req.params.projectionId;
@@ -24,6 +25,7 @@ const bookingController = {
             res.status(500).json({ message: err.message });
         }
     }),
+    //Used by user to make reservations
     createBookingForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const projectionId = req.params.projectionId;
@@ -36,6 +38,7 @@ const bookingController = {
             res.status(500).json({ message: err.message });
         }
     }),
+    //Used by user 
     getBookingByIdForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const projectionId = req.params.projectionId;
@@ -49,6 +52,7 @@ const bookingController = {
             res.status(500).json({ message: err.message });
         }
     }),
+    //Used by user
     updateBookingForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const projectionId = req.params.projectionId;
@@ -62,6 +66,7 @@ const bookingController = {
             res.status(500).json({ message: err.message });
         }
     }),
+    //Used by user
     deleteBookingForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const projectionId = req.params.projectionId;

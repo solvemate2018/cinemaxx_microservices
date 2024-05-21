@@ -25,20 +25,20 @@ const seedData = () => __awaiter(void 0, void 0, void 0, function* () {
     };
     // Seed Projection data
     const projections = [
-        { movieId: 101, cinemaHallId: 1, startTime: addHours(now, 2), endTime: addHours(now, 4), price: 12.50 },
-        { movieId: 102, cinemaHallId: 2, startTime: addHours(now, 5), endTime: addHours(now, 7.5), price: 15.00 },
-        { movieId: 103, cinemaHallId: 3, startTime: addHours(now, 8), endTime: addHours(now, 10.25), price: 10.00 },
-        { movieId: 104, cinemaHallId: 1, startTime: addHours(now, 10), endTime: addHours(now, 12), price: 8.00 },
-        { movieId: 105, cinemaHallId: 2, startTime: addHours(now, 13), endTime: addHours(now, 15.5), price: 11.50 }
+        { movieId: 1, cinemaHallId: 1, cinemaId: 1, scheduleId: 1, startTime: addHours(now, 2), endTime: addHours(now, 4), price: 12.50 },
+        { movieId: 2, cinemaHallId: 2, cinemaId: 1, scheduleId: 2, startTime: addHours(now, 5), endTime: addHours(now, 7.5), price: 15.00 },
+        { movieId: 3, cinemaHallId: 3, cinemaId: 2, scheduleId: 3, startTime: addHours(now, 8), endTime: addHours(now, 10.25), price: 10.00 },
+        { movieId: 4, cinemaHallId: 1, cinemaId: 1, scheduleId: 4, startTime: addHours(now, 10), endTime: addHours(now, 12), price: 8.00 },
+        { movieId: 5, cinemaHallId: 2, cinemaId: 1, scheduleId: 5, startTime: addHours(now, 13), endTime: addHours(now, 15.5), price: 11.50 }
     ];
     const projectionDocs = yield Projection_1.default.insertMany(projections);
     console.log('Projection data seeded successfully!');
     // Seed Booking data
     const bookings = [
-        { userId: 1, projectionId: projectionDocs[0]._id, totalPrice: 25.00, status: 'requested', seats: [5, 6, 7] },
+        { userId: 1, projectionId: projectionDocs[0]._id, totalPrice: 25.00, status: 'active', seats: [5, 6, 7] },
         { userId: 2, projectionId: projectionDocs[1]._id, totalPrice: 30.00, status: 'active', seats: [10, 11, 12] },
-        { userId: 3, projectionId: projectionDocs[2]._id, totalPrice: 15.00, status: 'past', seats: [1, 2, 3] },
-        { userId: 4, projectionId: projectionDocs[3]._id, totalPrice: 20.00, status: 'requested', seats: [20, 21] },
+        { userId: 3, projectionId: projectionDocs[2]._id, totalPrice: 15.00, status: 'active', seats: [1, 2, 3] },
+        { userId: 4, projectionId: projectionDocs[3]._id, totalPrice: 20.00, status: 'active', seats: [20, 21] },
         { userId: 5, projectionId: projectionDocs[4]._id, totalPrice: 45.00, status: 'active', seats: [25, 26, 27, 28] }
     ];
     yield Booking_1.default.insertMany(bookings);

@@ -1,7 +1,10 @@
+using EasyNetQ;
+using EasyNetQ.Topology;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using MovieService.Data;
+using MovieService.integrations.RabbitMQ;
 using MovieService.Services;
 using MovieService.Services.DirectorsService;
 using MovieService.Services.GenresService;
@@ -25,6 +28,9 @@ builder.Services.AddScoped<IActorsService, ActorsService>();
 builder.Services.AddScoped<IDirectorsService, DirectorsService>();
 builder.Services.AddScoped<IGenresService, GenresService>();
 builder.Services.AddScoped<IMoviesService, MoviesService>();
+
+builder.Services.AddSingleton<RabbitMqBusFactory>();
+builder.Services.AddScoped<RabbitMqProducer>();
 
 builder.Services.AddDbContext<MovieServiceDbContext>(options =>
 {

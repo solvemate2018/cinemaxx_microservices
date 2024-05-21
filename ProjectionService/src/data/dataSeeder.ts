@@ -15,11 +15,11 @@ const addHours = (date: Date, hours: number) => {
 
 // Seed Projection data
 const projections = [
-  { movieId: 1, cinemaHallId: 1, startTime: addHours(now, 2), endTime: addHours(now, 4), price: 12.50 },
-  { movieId: 2, cinemaHallId: 2, startTime: addHours(now, 5), endTime: addHours(now, 7.5), price: 15.00 },
-  { movieId: 3, cinemaHallId: 3, startTime: addHours(now, 8), endTime: addHours(now, 10.25), price: 10.00 },
-  { movieId: 4, cinemaHallId: 1, startTime: addHours(now, 10), endTime: addHours(now, 12), price: 8.00 },
-  { movieId: 5, cinemaHallId: 2, startTime: addHours(now, 13), endTime: addHours(now, 15.5), price: 11.50 }
+  { movieId: 1, cinemaHallId: 1, cinemaId: 1, scheduleId: 1, startTime: addHours(now, 2), endTime: addHours(now, 4), price: 12.50 },
+  { movieId: 2, cinemaHallId: 2, cinemaId: 1, scheduleId: 2, startTime: addHours(now, 5), endTime: addHours(now, 7.5), price: 15.00 },
+  { movieId: 3, cinemaHallId: 3, cinemaId: 2, scheduleId: 3, startTime: addHours(now, 8), endTime: addHours(now, 10.25), price: 10.00 },
+  { movieId: 4, cinemaHallId: 1, cinemaId: 1, scheduleId: 4, startTime: addHours(now, 10), endTime: addHours(now, 12), price: 8.00 },
+  { movieId: 5, cinemaHallId: 2, cinemaId: 1, scheduleId: 5, startTime: addHours(now, 13), endTime: addHours(now, 15.5), price: 11.50 }
 ];
 
     const projectionDocs = await Projection.insertMany(projections);

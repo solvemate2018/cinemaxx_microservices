@@ -71,6 +71,11 @@ public class RabbitMQ {
     }
 
     @Bean
+    public Queue cinemaMovieDeletedQueue() {
+        return new Queue("cinema.movie.deleted.updateSchedules", true, false, false);
+    }
+
+    @Bean
     public Binding cinemaDeletedBinding() {
         return BindingBuilder.bind(cinemaDeletedQueue()).to(cinemaExchange()).with("cinema.deleted");
     }
@@ -93,5 +98,10 @@ public class RabbitMQ {
     @Bean
     public Binding cinemaHallScheduleDeletedBinding() {
         return BindingBuilder.bind(cinemaHallScheduleDeletedQueue()).to(cinemaExchange()).with("cinema.hall.schedule.deleted");
+    }
+
+    @Bean
+    public Binding cinemaMovieDeletedBinding() {
+        return BindingBuilder.bind(cinemaMovieDeletedQueue()).to(cinemaExchange()).with("cinema.movie.deleted");
     }
 }
