@@ -15,7 +15,8 @@ public class RabbitMqBusFactory
 
     public RabbitMqBusFactory(IConfiguration configuration)
     {
-        _connectionString = configuration.GetSection("RabbitMq:ConnectionString")?.Value;
+        _connectionString = configuration.GetSection("RABBITMQ_CONNECTION_STRING")?.Value
+                            ?? "amqp://guest:guest@localhost:5672/";
     }
     
     public async Task<IBus> CreateBus()

@@ -36,7 +36,7 @@ public static class InitialData
     public static List<Actor> GetActors()
     {
         return new List<Actor>
-        {
+        { 
             new Actor { Id = 1, Name = "Tom Cruise" },
         new Actor { Id = 2, Name = "Brad Pitt" },
         new Actor { Id = 3, Name = "Jennifer Lawrence" },

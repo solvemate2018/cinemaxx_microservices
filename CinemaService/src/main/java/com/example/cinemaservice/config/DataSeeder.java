@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,13 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedCinemas() {
         for (int i = 0; i < CINEMA_NAMES.length; i++) {
+            String cinemaName = CINEMA_NAMES[i];
+            Optional<Cinema> existingCinema = cinemaRepository.findCinemaByName(cinemaName);
+
+            if (existingCinema.isPresent()) {
+                continue; // Cinema already exists, skip to next one
+            }
+
             Cinema cinema = new Cinema();
             cinema.setName(CINEMA_NAMES[i]);
             cinema.setAddress(CINEMA_ADDRESSES[i]);

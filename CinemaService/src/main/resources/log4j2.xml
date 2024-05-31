@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="30">
+    <Appenders>
+        <SeqAppender name="SeqAppender">
+            <SeqUrl name="Url">http://seq:5341</SeqUrl>
+            <AppName name="AppName">Cinema Service</AppName>
+            <CacheTime>300</CacheTime>
+            <CorrelationProperty>CorrelationId</CorrelationProperty>
+            <IncludeCorrelation>true</IncludeCorrelation>
+            <Property name="Example">Example Property</Property>
+        </SeqAppender>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <AsyncRoot level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="SeqAppender"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

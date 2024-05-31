@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
-const connectionString = process.env.DB_CONNECTION_STRING;
+const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
 const connectDB = async () => {
   try {
     let mongoURI = connectionString;

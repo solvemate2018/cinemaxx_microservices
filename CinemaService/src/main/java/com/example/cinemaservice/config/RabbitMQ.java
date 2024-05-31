@@ -1,16 +1,17 @@
 package com.example.cinemaservice.config;
 
-import com.rabbitmq.client.ConnectionFactory;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
+@Slf4j
 public class RabbitMQ {
     @Autowired
     private Environment env;
@@ -22,11 +23,11 @@ public class RabbitMQ {
         String user = env.getProperty("rabbitmq.user");
         String password = env.getProperty("rabbitmq.password");
 
-        ConnectionFactory factory = new ConnectionFactory();
+        CachingConnectionFactory factory = new CachingConnectionFactory();
 
         if(host != null && port != null && user != null && password != null) {
             factory.setHost(host);
-            factory.setPort(Integer.getInteger(port));
+            factory.setPort(Integer.parseInt(port));
             factory.setUsername(user);
             factory.setPassword(password);
         }

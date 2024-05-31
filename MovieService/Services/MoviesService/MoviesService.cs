@@ -29,9 +29,19 @@ public class MoviesService(MovieServiceDbContext dbContext, RabbitMqProducer mqP
         var actors = await dbContext.Actors.Where(a => requestData.ActorIds.Contains(a.Id)).ToListAsync();
         var director = await dbContext.Directors.FindAsync(requestData.DirectorId);
 
-        if (genre == null || actors.Count != requestData.ActorIds.Length || director == null)
+        if (genre == null)
         {
-            return null;
+            throw new ArgumentException("No genre with such ID");
+        }
+
+        if (actors.Count != requestData.ActorIds.Length)
+        {
+            throw new ArgumentException("One or more of the actorIds are not in our system");
+        }
+
+        if (director == null)
+        {
+            throw new ArgumentException("No director with such ID");
         }
         
         Movie movie = new Movie

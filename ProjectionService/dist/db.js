@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const mongoose_1 = __importDefault(require("mongoose"));
-const connectionString = process.env.DB_CONNECTION_STRING;
+const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let mongoURI = connectionString;

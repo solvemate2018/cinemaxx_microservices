@@ -22,9 +22,9 @@ public class DataSourceConfig {
     @Bean
     @Primary
     public DataSource dataSource(){
-        String dbUrl = env.getProperty("db.connection.string");
-        String dbUser = env.getProperty("db.connection.username");
-        String dbPassword = env.getProperty("db.connection.password");
+        String dbUrl = env.getProperty("mysql.database");
+        String dbUser = env.getProperty("mysql.user");
+        String dbPassword = env.getProperty("mysql.password");
 
         log.info("Initializing DataSource:" + dbUrl + dbUser + dbPassword);
         if (dbUrl != null && !dbUrl.isEmpty() && dbUser != null && !dbUser.isEmpty() && dbPassword != null && !dbPassword.isEmpty()) {

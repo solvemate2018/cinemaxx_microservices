@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import bookingController from '../controllers/bookingController';
+import { authenticateJWT, authorize } from '../middleware/authenticationMiddleware';
 
 const router = Router();
 
-router.get('/api/projections/:projectionId/bookings', bookingController.getAllBookingsForProjection);
-router.post('/api/projections/:projectionId/bookings', bookingController.createBookingForProjection);
-router.get('/api/projections/:projectionId/bookings/:bookingId', bookingController.getBookingByIdForProjection);
-router.put('/api/projections/:projectionId/bookings/:bookingId', bookingController.updateBookingForProjection);
-router.delete('/api/projections/:projectionId/bookings/:bookingId', bookingController.deleteBookingForProjection);
+router.get('/projections/:projectionId/bookings', authenticateJWT, authorize(["ADMIN"]),  bookingController.getAllBookingsForProjection);
+router.post('/projections/:projectionId/bookings', authenticateJWT, bookingController.createBookingForProjection);
+router.get('/bookings/:bookingId', authenticateJWT, bookingController.getBookingById);
+router.delete('/bookings/:bookingId', authenticateJWT, bookingController.deleteBookingById);
 
 export default router;

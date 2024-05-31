@@ -6,6 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const projectionController_1 = __importDefault(require("../controllers/projectionController"));
 const router = (0, express_1.Router)();
-router.get('/api/projections/', projectionController_1.default.getAllProjections);
-router.get('/api/projections/:projectionId', projectionController_1.default.getProjectionById);
+router.get('/projections/', projectionController_1.default.getAllProjections);
+router.get('/projections/:projectionId', projectionController_1.default.getProjectionById);
 exports.default = router;

@@ -26,11 +26,15 @@ const bookingController = {
         }
     }),
     //Used by user to make reservations
+    //Needs to validate UserID or get it from context
+    //Needs to validate Seats
     createBookingForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         try {
             const projectionId = req.params.projectionId;
             const booking = req.body;
-            const newBooking = new Booking_1.default(Object.assign(Object.assign({}, booking), { projectionId: projectionId }));
+            const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+            const newBooking = new Booking_1.default(Object.assign(Object.assign({}, booking), { projectionId: projectionId, userId: userId }));
             const savedBooking = yield newBooking.save();
             res.status(201).json(savedBooking);
         }
@@ -39,12 +43,16 @@ const bookingController = {
         }
     }),
     //Used by user 
-    getBookingByIdForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    getBookingById: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
         try {
-            const projectionId = req.params.projectionId;
-            const booking = yield Booking_1.default.findOne({ _id: req.params.bookingId, projectionId: projectionId });
+            const booking = yield Booking_1.default.findOne({ _id: req.params.bookingId });
+            const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
             if (!booking) {
                 return res.status(404).json({ message: 'Booking not found' });
+            }
+            if (userId && booking.userId !== parseInt(userId)) {
+                return res.status(403).json({ message: `Can't get booking that is not yours!` });
             }
             res.json(booking);
         }
@@ -53,28 +61,22 @@ const bookingController = {
         }
     }),
     //Used by user
-    updateBookingForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //Don't have to validate anything
+    deleteBookingById: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _c;
         try {
-            const projectionId = req.params.projectionId;
-            const updatedBooking = yield Booking_1.default.findOneAndUpdate({ _id: req.params.bookingId, projectionId: projectionId }, req.body, { new: true });
-            if (!updatedBooking) {
-                return res.status(404).json({ message: 'Booking not found' });
+            const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+            const booking = yield Booking_1.default.findOne({ _id: req.params.bookingId });
+            if (booking && userId && booking.userId === parseInt(userId)) {
+                yield Booking_1.default.findOneAndDelete({ _id: req.params.bookingId });
+                res.json({ message: 'Booking deleted successfully' });
             }
-            res.json(updatedBooking);
-        }
-        catch (err) {
-            res.status(500).json({ message: err.message });
-        }
-    }),
-    //Used by user
-    deleteBookingForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const projectionId = req.params.projectionId;
-            const deletedBooking = yield Booking_1.default.findOneAndDelete({ _id: req.params.bookingId, projectionId: projectionId });
-            if (!deletedBooking) {
-                return res.status(404).json({ message: 'Booking not found' });
+            else if (booking && userId) {
+                res.status(403).json({ message: "You can't delete booking that is not yours." });
             }
-            res.json({ message: 'Booking deleted successfully' });
+            else {
+                res.status(404).json({ message: "Booking not found." });
+            }
         }
         catch (err) {
             res.status(500).json({ message: err.message });

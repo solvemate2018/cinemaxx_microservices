@@ -29,10 +29,12 @@ public class RabbitMqConsumer {
 
             int movieId = jsonNode.get("Id").asInt();
 
-            movieScheduleService.deleteMovieSchedulesByMovieId(movieId);
+            int deletedSchedules = movieScheduleService.deleteMovieSchedulesByMovieId(movieId);
+
+            log.info("Deleted {} movie schedules for movie {}", deletedSchedules, movieId);
 
         } catch (JsonProcessingException e) {
-            log.error("Error parsing JSON message: " + e.getMessage());
+            log.error("Error parsing JSON message: {}", e.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
