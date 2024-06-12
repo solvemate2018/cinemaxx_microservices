@@ -8,6 +8,7 @@ const projectionSchema = new mongoose_1.Schema({
     scheduleId: { type: Number, required: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
+    seats: { type: [], required: true },
     price: { type: Number, required: true, validate: {
             validator: (value) => value.valueOf() > 1,
             message: 'Price must be higher then 1.',

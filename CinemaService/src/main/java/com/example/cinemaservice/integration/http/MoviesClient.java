@@ -5,10 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+
+import javax.naming.ServiceUnavailableException;
 
 @Service
 @Slf4j
@@ -27,18 +33,23 @@ public class MoviesClient {
         this.webClient = webClientBuilder.baseUrl(moviesURL == null ? "http://localhost:5100" : moviesURL).build();
     }
 
+    @Retryable(retryFor = WebClientRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 2000))
     public MovieResult getMovieById(int id) {
         if(webClient == null){
             initializeWebClient();
         }
-        try {
-            return webClient.get()
+        return webClient.get()
                     .uri("/movies/{id}", id)
                     .retrieve()
                     .bodyToMono(MovieResult.class)
                     .block();
-        } catch (Exception ex) {
-            log.error("Error occurred while fetching movie: " + ex.getMessage());
-            return null;
         }
-    }}
+
+    @Recover
+    MovieResult recover(WebClientRequestException e, int id) throws ServiceUnavailableException {
+        log.error("Error occurred while fetching movie: " + id);
+        throw new ServiceUnavailableException("Movie service is currently unavailable please try again later.");
+    }
+}
+
+

@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consumeRabbitMqMessages = void 0;
 const rabbitMqFactory_1 = require("./rabbitMqFactory");
 const rabbitMqConsumerHelper_1 = require("./utils/rabbitMqConsumerHelper");
+const logger_1 = __importDefault(require("../../logging/logger"));
 function consumeMessage(channel, queueName, callback) {
     return __awaiter(this, void 0, void 0, function* () {
         yield channel.prefetch(1);
@@ -28,7 +32,7 @@ function consumeRabbitMqMessages() {
         yield consumeMessage(channel, "cinema.hall.schedule.updated", rabbitMqConsumerHelper_1.consumeCinemaHallScheduleUpdated);
         yield consumeMessage(channel, "cinema.movie.deleted.updateProjections", rabbitMqConsumerHelper_1.consumeMovieDeleted);
         yield consumeMessage(channel, "cinema.movie.updateDuration", rabbitMqConsumerHelper_1.consumeMovieDurationUpdated);
-        console.log("Waiting for messages...");
+        logger_1.default.info("Waiting for messages...");
     });
 }
 exports.consumeRabbitMqMessages = consumeRabbitMqMessages;

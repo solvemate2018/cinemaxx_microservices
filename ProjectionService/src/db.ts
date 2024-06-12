@@ -1,5 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import logger from './logging/logger';
 
 const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
 const connectDB = async () => {
@@ -10,11 +11,11 @@ const connectDB = async () => {
       const mongod = await MongoMemoryServer.create();
       mongoURI = mongod.getUri();
     }
-    console.log(mongoURI);
+    logger.info(mongoURI);
     await mongoose.connect(mongoURI);
-    console.log('MongoDB connected successfully');
+    logger.info('MongoDB connected successfully');
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    logger.error('MongoDB connection error:', error);
     process.exit(1);
   }
 };

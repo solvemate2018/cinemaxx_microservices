@@ -3,6 +3,8 @@ import Projection from "../../../models/Projection";
 import moment from "moment";
 import * as amqp from "amqplib";
 import { ObjectId } from "mongodb";
+import Seat from "../../../models/Seat";
+import logger from "../../../logging/logger";
 
 //Delete all the projections in that cinema
 //CinemaId
@@ -43,9 +45,9 @@ export async function consumeCinemaHallScheduleCreated(msg: amqp.Message | null)
       const projections = generateProjections(jsonObject);
       try {
         const generatedProjections = await Projection.insertMany(projections);
-        console.info(`Created ${generatedProjections.length} projections for schedule ${jsonObject.id}`);
+        logger.info(`Created ${generatedProjections.length} projections for schedule ${jsonObject.id}`);
       } catch (error) {
-        console.error("Error creating projections:", error);
+        logger.error("Error creating projections:", error);
       }
     }
   }
@@ -62,9 +64,9 @@ export async function consumeCinemaHallScheduleUpdated(msg: amqp.Message | null)
         await deleteProjectionsByField("scheduleId", jsonObject.id, `schedule ${jsonObject.name}`);
         const projections = generateProjections(jsonObject);
         const generatedProjections = await Projection.insertMany(projections);
-        console.info(`Created ${generatedProjections.length} projections for schedule ${jsonObject.id}`);
+        logger.info(`Created ${generatedProjections.length} projections for schedule ${jsonObject.id}`);
       } catch (error) {
-        console.error("Error updating projections:", error);
+        logger.error("Error updating projections:", error);
       }
     }
   }
@@ -93,9 +95,9 @@ export async function consumeMovieDurationUpdated(msg: amqp.Message | null): Pro
           { movieId: Id },
           { $set: { endTime: { $add: ["$startTime", Duration * 60000] } } }
         );
-        console.info(`Updated endTime for ${updatedCount.modifiedCount} projections with movie id: ${Id}`);
+        logger.info(`Updated endTime for ${updatedCount.modifiedCount} projections with movie id: ${Id}`);
       } catch (error) {
-        console.error("Error updating projection endTime:", error);
+        logger.error("Error updating projection endTime:", error);
       }
     }
   }
@@ -103,7 +105,7 @@ export async function consumeMovieDurationUpdated(msg: amqp.Message | null): Pro
 
 // Utility function to log received messages
 function logReceivedMessage(action: string, msg: any) {
-    console.info(`Received message for ${action}: ${msg?.content.toString()}`);
+    logger.info(`Received message for ${action}: ${msg?.content.toString()}`);
   }
   
   // Utility function to parse message content
@@ -113,7 +115,7 @@ function logReceivedMessage(action: string, msg: any) {
 
   async function deleteProjectionsByField(field: string, value: string, entityName: string): Promise<void> {
     const deleteCount = (await Projection.deleteMany({ [field]: value })).deletedCount;
-    console.info(`Deleted ${deleteCount} projections for ${entityName}`);
+    logger.info(`Deleted ${deleteCount} projections for ${entityName}`);
   }
 
   function generateProjections({
@@ -130,7 +132,17 @@ function logReceivedMessage(action: string, msg: any) {
     const startDateMoment = moment(startDate).startOf("day");
     const endDateMoment = moment(endDate).startOf("day");
     const price = Math.floor(Math.random() * (25 - 5 + 1)) + 5;
-  
+    let seats: Seat[] = [];
+
+    hall.seats.forEach((seat: any) => {
+      seats.push({
+        id: seat.id,
+        row: seat.row,
+        seat: seat.seatNumber,
+        status: 'available'
+      })
+    });
+
     for (let date = startDateMoment; date.isSameOrBefore(endDateMoment); date.add(1, "day")) {
       const dayOfWeek = date.day();
       if (daysOfWeek && daysOfWeek.includes(dayOfWeek)) {
@@ -143,6 +155,7 @@ function logReceivedMessage(action: string, msg: any) {
             cinemaId: hall?.cinema.id || "",
             movieId: movieId || "",
             price,
+            seats: seats,
             scheduleId: id,
             startTime: projectionDateTime.toDate(),
             endTime: calculateEndTime(projectionDateTime.toDate(), duration || 0),

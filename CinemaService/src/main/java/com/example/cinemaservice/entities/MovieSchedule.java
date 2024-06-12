@@ -40,6 +40,9 @@ public class MovieSchedule {
     @Column(nullable = false)
     private int duration;
 
+    @Column(nullable = false)
+    private double price;
+
     @ElementCollection
     @CollectionTable(name = "start_times", joinColumns = @JoinColumn(name = "schedule_id"))
     @Column(name = "start_time")

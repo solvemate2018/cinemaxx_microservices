@@ -8,4 +8,5 @@ const projectionController_1 = __importDefault(require("../controllers/projectio
 const router = (0, express_1.Router)();
 router.get('/projections/', projectionController_1.default.getAllProjections);
 router.get('/projections/:projectionId', projectionController_1.default.getProjectionById);
+router.get('/cinemas/:cinemaId/projections', projectionController_1.default.getProjectionsByCinemaIdAndDateSortedByMovieId);
 exports.default = router;

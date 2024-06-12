@@ -1,11 +1,12 @@
 import { Schema, model, Document, Types } from 'mongoose';
+import Seat from './Seat';
 
 interface Booking extends Document {
     userId: Number,
     projectionId: Number,
     totalPrice: Number,
     status: String,
-    seats: Number[]
+    seats: Seat[]
 }
 
 const bookingSchema = new Schema<Booking>({

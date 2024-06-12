@@ -1,13 +1,15 @@
 import { Schema, model, Document, Types } from 'mongoose';
+import Seat from './Seat';
 
 interface Projection extends Document {
-    movieId: Number,
-    cinemaHallId: Number,
-    cinemaId: Number,
-    scheduleId: Number,
+    movieId: number,
+    cinemaHallId: number,
+    cinemaId: number,
+    scheduleId: number,
     startTime: Date,
     endTime: Date,
-    price: Number,
+    price: number,
+    seats: Seat[]
 }
 
 const projectionSchema = new Schema<Projection>({
@@ -17,6 +19,7 @@ const projectionSchema = new Schema<Projection>({
     scheduleId: { type: Number, required: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
+    seats: { type: [], required: true },
     price: { type: Number, required: true, validate: {
         validator: (value: Number) =>  value.valueOf() > 1,
         message: 'Price must be higher then 1.',

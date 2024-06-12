@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Projection_1 = __importDefault(require("../models/Projection"));
 const Booking_1 = __importDefault(require("../models/Booking"));
+const logger_1 = __importDefault(require("../logging/logger"));
 const seedData = () => __awaiter(void 0, void 0, void 0, function* () {
     yield Booking_1.default.deleteMany({});
     yield Projection_1.default.deleteMany({});
@@ -32,7 +33,7 @@ const seedData = () => __awaiter(void 0, void 0, void 0, function* () {
         { movieId: 5, cinemaHallId: 2, cinemaId: 1, scheduleId: 5, startTime: addHours(now, 13), endTime: addHours(now, 15.5), price: 11.50 }
     ];
     const projectionDocs = yield Projection_1.default.insertMany(projections);
-    console.log('Projection data seeded successfully!');
+    logger_1.default.info('Projection data seeded successfully!');
     // Seed Booking data
     const bookings = [
         { userId: 1, projectionId: projectionDocs[0]._id, totalPrice: 25.00, status: 'active', seats: [5, 6, 7] },
@@ -42,6 +43,6 @@ const seedData = () => __awaiter(void 0, void 0, void 0, function* () {
         { userId: 5, projectionId: projectionDocs[4]._id, totalPrice: 45.00, status: 'active', seats: [25, 26, 27, 28] }
     ];
     yield Booking_1.default.insertMany(bookings);
-    console.log('Booking data seeded successfully!');
+    logger_1.default.info('Booking data seeded successfully!');
 });
 exports.default = seedData;

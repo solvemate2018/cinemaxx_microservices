@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const mongoose_1 = __importDefault(require("mongoose"));
+const logger_1 = __importDefault(require("./logging/logger"));
 const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -22,12 +23,12 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
             const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
             mongoURI = mongod.getUri();
         }
-        console.log(mongoURI);
+        logger_1.default.info(mongoURI);
         yield mongoose_1.default.connect(mongoURI);
-        console.log('MongoDB connected successfully');
+        logger_1.default.info('MongoDB connected successfully');
     }
     catch (error) {
-        console.error('MongoDB connection error:', error);
+        logger_1.default.error('MongoDB connection error:', error);
         process.exit(1);
     }
 });

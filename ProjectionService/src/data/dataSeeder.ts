@@ -1,5 +1,6 @@
 import Projection from '../models/Projection';
 import Booking from '../models/Booking';
+import logger from '../logging/logger';
 
 const seedData = async () => {
     await Booking.deleteMany({});
@@ -23,7 +24,7 @@ const projections = [
 ];
 
     const projectionDocs = await Projection.insertMany(projections);
-    console.log('Projection data seeded successfully!');
+    logger.info('Projection data seeded successfully!');
 
     // Seed Booking data
     const bookings = [
@@ -35,7 +36,7 @@ const projections = [
     ];
 
     await Booking.insertMany(bookings);
-    console.log('Booking data seeded successfully!');
+    logger.info('Booking data seeded successfully!');
 }
 
 export default seedData;

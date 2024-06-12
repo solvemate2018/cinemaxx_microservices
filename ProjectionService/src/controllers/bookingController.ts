@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Booking from '../models/Booking';
+import Projection from '../models/Projection';
 
 
 const bookingController = {
@@ -20,11 +21,34 @@ const bookingController = {
       createBookingForProjection: async (req: Request, res: Response) => {
         try {
           const projectionId = req.params.projectionId;
-          const booking = req.body;
+          const requestedSeatIds = req.body.map((seat: any) => seat.id);
           const userId = req.user?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
-          const newBooking = new Booking({ ...booking, projectionId: projectionId, userId: userId});
-          const savedBooking = await newBooking.save();
-          res.status(201).json(savedBooking);
+          const projection = await Projection.findById(projectionId);
+          if(projection){
+            const totalPrice = projection.price * requestedSeatIds.length;
+            const seats = projection.seats.filter(seat => requestedSeatIds.includes(seat.id))
+            if(seats.length == requestedSeatIds.length){
+              projection.seats = projection.seats.map(seat => {
+                if(requestedSeatIds.includes(seat.id)){
+                  seat.status = 'Booked';
+                  return seat
+                }
+                return seat;
+              })
+  
+              await Projection.findOneAndUpdate({ _id: projection._id }, { seats: projection.seats });
+              const newBooking = new Booking({ seats: seats, status: 'active', totalPrice: totalPrice, projectionId: projectionId, userId: userId});
+              const savedBooking = await newBooking.save();
+              res.status(201).json(savedBooking);
+            }
+            else{
+              res.status(404).send('Some of the seats do not exist for this projection');
+            }
+
+          }
+          else{
+            res.status(404).send('Projection not found');
+          }
         } catch (err: any) {
           res.status(500).json({ message: err.message });
         }

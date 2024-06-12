@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Projection_1 = __importDefault(require("../models/Projection"));
+const logger_1 = __importDefault(require("../logging/logger"));
 const projectionController = {
     getAllProjections: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -35,5 +36,30 @@ const projectionController = {
             res.status(500).json({ message: err.message });
         }
     }),
+    getProjectionsByCinemaIdAndDateSortedByMovieId: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { date } = req.query;
+            const parsedDate = new Date(date);
+            const startOfDay = new Date(parsedDate);
+            startOfDay.setHours(0, 0, 0, 0);
+            logger_1.default.info(parsedDate);
+            logger_1.default.info(req.params.cinemaId);
+            const endOfDay = new Date(parsedDate);
+            endOfDay.setHours(23, 59, 59, 999);
+            const projections = yield (yield Projection_1.default.find({ cinemaId: req.params.cinemaId,
+                startTime: {
+                    $gte: startOfDay,
+                    $lt: endOfDay,
+                },
+            })).sort(p => p.movieId);
+            if (!projections) {
+                return res.status(404).json({ message: 'Projections not found' });
+            }
+            res.json(projections);
+        }
+        catch (err) {
+            res.status(500).json({ message: err.message });
+        }
+    })
 };
 exports.default = projectionController;

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Booking_1 = __importDefault(require("../models/Booking"));
+const Projection_1 = __importDefault(require("../models/Projection"));
 const bookingController = {
     //Used by admin
     getAllBookingsForProjection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,11 +33,32 @@ const bookingController = {
         var _a;
         try {
             const projectionId = req.params.projectionId;
-            const booking = req.body;
+            const requestedSeatIds = req.body.map((seat) => seat.id);
             const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
-            const newBooking = new Booking_1.default(Object.assign(Object.assign({}, booking), { projectionId: projectionId, userId: userId }));
-            const savedBooking = yield newBooking.save();
-            res.status(201).json(savedBooking);
+            const projection = yield Projection_1.default.findById(projectionId);
+            if (projection) {
+                const totalPrice = projection.price * requestedSeatIds.length;
+                const seats = projection.seats.filter(seat => requestedSeatIds.includes(seat.id));
+                if (seats.length == requestedSeatIds.length) {
+                    projection.seats = projection.seats.map(seat => {
+                        if (requestedSeatIds.includes(seat.id)) {
+                            seat.status = 'Booked';
+                            return seat;
+                        }
+                        return seat;
+                    });
+                    yield Projection_1.default.findOneAndUpdate({ _id: projection._id }, { seats: projection.seats });
+                    const newBooking = new Booking_1.default({ seats: seats, status: 'active', totalPrice: totalPrice, projectionId: projectionId, userId: userId });
+                    const savedBooking = yield newBooking.save();
+                    res.status(201).json(savedBooking);
+                }
+                else {
+                    res.status(404).send('Some of the seats do not exist for this projection');
+                }
+            }
+            else {
+                res.status(404).send('Projection not found');
+            }
         }
         catch (err) {
             res.status(500).json({ message: err.message });

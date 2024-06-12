@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authorize = exports.authenticateJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const logger_1 = __importDefault(require("../logging/logger"));
 const jwt_secret = process.env.JWT_SECRET_KEY;
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -15,12 +16,11 @@ const authenticateJWT = (req, res, next) => {
                 return res.sendStatus(403);
             }
             req.user = user;
-            console.log("User authenticated successfully!");
             next();
         });
     }
     else {
-        console.log("User authentication failed!");
+        logger_1.default.warn("User authentication failed!");
         res.sendStatus(401);
     }
 };
@@ -32,7 +32,7 @@ const authorize = (roles) => {
         }
         const hasRole = roles.some(role => { var _a; return role === ((_a = req.user) === null || _a === void 0 ? void 0 : _a['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']); });
         if (!hasRole) {
-            console.log("User attempting to access endpoint without access!");
+            logger_1.default.warn("User attempting to access endpoint without access!");
             return res.sendStatus(403);
         }
         next();
